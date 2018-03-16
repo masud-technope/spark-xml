@@ -29,15 +29,15 @@ package object xml {
   implicit class XmlContext(sqlContext: SQLContext) extends Serializable {
     @deprecated("Use read.format(\"xml\") or read.xml", "0.4.0")
     def xmlFile(
-        filePath: String,
-        rowTag: String = XmlOptions.DEFAULT_ROW_TAG,
-        samplingRatio: Double = 1.0,
-        excludeAttribute: Boolean = false,
-        treatEmptyValuesAsNulls: Boolean = false,
-        failFast: Boolean = false,
-        attributePrefix: String = XmlOptions.DEFAULT_ATTRIBUTE_PREFIX,
-        valueTag: String = XmlOptions.DEFAULT_VALUE_TAG,
-        charset: String = XmlOptions.DEFAULT_CHARSET): DataFrame = {
+      filePath:                String,
+      rowTag:                  String  = XmlOptions.DEFAULT_ROW_TAG,
+      samplingRatio:           Double  = 1.0,
+      excludeAttribute:        Boolean = false,
+      treatEmptyValuesAsNulls: Boolean = false,
+      failFast:                Boolean = false,
+      attributePrefix:         String  = XmlOptions.DEFAULT_ATTRIBUTE_PREFIX,
+      valueTag:                String  = XmlOptions.DEFAULT_VALUE_TAG,
+      charset:                 String  = XmlOptions.DEFAULT_CHARSET): DataFrame = {
 
       val parameters = Map(
         "rowTag" -> rowTag,
@@ -64,8 +64,8 @@ package object xml {
   implicit class XmlSchemaRDD(dataFrame: DataFrame) {
     @deprecated("Use write.format(\"xml\") or write.xml", "0.4.0")
     def saveAsXmlFile(
-        path: String, parameters: Map[String, String] = Map(),
-        compressionCodec: Class[_ <: CompressionCodec] = null): Unit = {
+      path: String, parameters: Map[String, String] = Map(),
+      compressionCodec: Class[_ <: CompressionCodec] = null): Unit = {
       val mutableParams = collection.mutable.Map(parameters.toSeq: _*)
       val safeCodec = mutableParams.get("codec")
         .orElse(Option(compressionCodec).map(_.getCanonicalName))

@@ -22,10 +22,10 @@ import org.apache.hadoop.io.compress._
 private[xml] object CompressionCodecs {
   private val shortCompressionCodecNames: Map[String, String] = {
     val codecMap = collection.mutable.Map.empty[String, String]
-    allCatch toTry(codecMap += "bzip2" -> classOf[BZip2Codec].getName)
-    allCatch toTry(codecMap += "gzip" -> classOf[GzipCodec].getName)
-    allCatch toTry(codecMap += "lz4" -> classOf[Lz4Codec].getName)
-    allCatch toTry(codecMap += "snappy" -> classOf[SnappyCodec].getName)
+    allCatch toTry (codecMap += "bzip2" -> classOf[BZip2Codec].getName)
+    allCatch toTry (codecMap += "gzip" -> classOf[GzipCodec].getName)
+    allCatch toTry (codecMap += "lz4" -> classOf[Lz4Codec].getName)
+    allCatch toTry (codecMap += "snappy" -> classOf[SnappyCodec].getName)
     codecMap.toMap
   }
 

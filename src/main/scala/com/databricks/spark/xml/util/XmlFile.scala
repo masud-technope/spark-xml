@@ -23,32 +23,34 @@ import scala.collection.Map
 
 import com.databricks.spark.xml.parsers.StaxXmlGenerator
 import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter
-import org.apache.hadoop.io.{Text, LongWritable}
+import org.apache.hadoop.io.{ Text, LongWritable }
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.DataFrame
-import com.databricks.spark.xml.{XmlOptions, XmlInputFormat}
+import com.databricks.spark.xml.{ XmlOptions, XmlInputFormat }
 
 private[xml] object XmlFile {
   val DEFAULT_INDENT = "    "
   val DEFAULT_ROW_SEPARATOR = "\n"
 
   def withCharset(
-      context: SparkContext,
-      location: String,
-      charset: String,
-      rowTag: String): RDD[String] = {
+    context:  SparkContext,
+    location: String,
+    charset:  String,
+    rowTag:   String): RDD[String] = {
     context.hadoopConfiguration.set(XmlInputFormat.START_TAG_KEY, s"<$rowTag>")
     context.hadoopConfiguration.set(XmlInputFormat.END_TAG_KEY, s"</$rowTag>")
     context.hadoopConfiguration.set(XmlInputFormat.ENCODING_KEY, charset)
     if (Charset.forName(charset) == Charset.forName(XmlOptions.DEFAULT_CHARSET)) {
-      context.newAPIHadoopFile(location,
+      context.newAPIHadoopFile(
+        location,
         classOf[XmlInputFormat],
         classOf[LongWritable],
         classOf[Text]).map(pair => new String(pair._2.getBytes, 0, pair._2.getLength))
     } else {
-      context.newAPIHadoopFile(location,
+      context.newAPIHadoopFile(
+        location,
         classOf[XmlInputFormat],
         classOf[LongWritable],
         classOf[Text]).map(pair => new String(pair._2.getBytes, 0, pair._2.getLength, charset))
@@ -75,9 +77,9 @@ private[xml] object XmlFile {
    * Namely, roundtrip in writing and reading can end up in different schema structure.
    */
   def saveAsXmlFile(
-      dataFrame: DataFrame,
-      path: String,
-      parameters: Map[String, String] = Map()): Unit = {
+    dataFrame:  DataFrame,
+    path:       String,
+    parameters: Map[String, String] = Map()): Unit = {
     val options = XmlOptions(parameters.toMap)
     val codecClass = CompressionCodecs.getCodecClass(options.codec)
     val startElement = s"<${options.rootTag}>"
@@ -136,7 +138,7 @@ private[xml] object XmlFile {
     }
 
     codecClass match {
-      case null => xmlRDD.saveAsTextFile(path)
+      case null  => xmlRDD.saveAsTextFile(path)
       case codec => xmlRDD.saveAsTextFile(path, codec)
     }
   }

@@ -16,7 +16,7 @@
 package com.databricks.spark.xml.util
 
 import java.math.BigDecimal
-import java.sql.{Date, Timestamp}
+import java.sql.{ Date, Timestamp }
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -42,39 +42,39 @@ object TypeCast {
    * @param castType SparkSQL type
    */
   private[xml] def castTo(
-      datum: String,
-      castType: DataType,
-      options: XmlOptions,
-      nullable: Boolean = true): Any = {
+    datum:    String,
+    castType: DataType,
+    options:  XmlOptions,
+    nullable: Boolean    = true): Any = {
     if (datum == options.nullValue &&
       nullable ||
-      (options.treatEmptyValuesAsNulls && datum == "")){
+      (options.treatEmptyValuesAsNulls && datum == "")) {
       null
     } else {
       castType match {
-        case _: ByteType => datum.toByte
-        case _: ShortType => datum.toShort
+        case _: ByteType    => datum.toByte
+        case _: ShortType   => datum.toShort
         case _: IntegerType => datum.toInt
-        case _: LongType => datum.toLong
+        case _: LongType    => datum.toLong
         case _: FloatType => Try(datum.toFloat)
           .getOrElse(NumberFormat.getInstance(Locale.getDefault).parse(datum).floatValue())
         case _: DoubleType => Try(datum.toDouble)
           .getOrElse(NumberFormat.getInstance(Locale.getDefault).parse(datum).doubleValue())
-        case _: BooleanType => datum.toBoolean
-        case _: DecimalType => new BigDecimal(datum.replaceAll(",", ""))
+        case _: BooleanType   => datum.toBoolean
+        case _: DecimalType   => new BigDecimal(datum.replaceAll(",", ""))
         case _: TimestampType => Timestamp.valueOf(datum)
-        case _: DateType => Date.valueOf(datum)
-        case _: StringType => datum
-        case _ => throw new RuntimeException(s"Unsupported type: ${castType.typeName}")
+        case _: DateType      => Date.valueOf(datum)
+        case _: StringType    => datum
+        case _                => throw new RuntimeException(s"Unsupported type: ${castType.typeName}")
       }
     }
   }
 
   // TODO: This function unnecessarily does type dispatch. Should merge it with `castTo`.
   private[xml] def convertTo(
-      datum: String,
-      dataType: DataType,
-      options: XmlOptions): Any = {
+    datum:    String,
+    dataType: DataType,
+    options:  XmlOptions): Any = {
     val value = if (datum != null && options.ignoreSurroundingSpaces) {
       datum.trim()
     } else {
@@ -82,17 +82,17 @@ object TypeCast {
     }
 
     dataType match {
-      case NullType => castTo(value, StringType, options)
-      case LongType => signSafeToLong(value, options)
-      case DoubleType => signSafeToDouble(value, options)
-      case BooleanType => castTo(value, BooleanType, options)
-      case StringType => castTo(value, StringType, options)
-      case DateType => castTo(value, DateType, options)
-      case TimestampType => castTo(value, TimestampType, options)
-      case FloatType => signSafeToFloat(value, options)
-      case ByteType => castTo(value, ByteType, options)
-      case ShortType => castTo(value, ShortType, options)
-      case IntegerType => signSafeToInt(value, options)
+      case NullType        => castTo(value, StringType, options)
+      case LongType        => signSafeToLong(value, options)
+      case DoubleType      => signSafeToDouble(value, options)
+      case BooleanType     => castTo(value, BooleanType, options)
+      case StringType      => castTo(value, StringType, options)
+      case DateType        => castTo(value, DateType, options)
+      case TimestampType   => castTo(value, TimestampType, options)
+      case FloatType       => signSafeToFloat(value, options)
+      case ByteType        => castTo(value, ByteType, options)
+      case ShortType       => castTo(value, ShortType, options)
+      case IntegerType     => signSafeToInt(value, options)
       case dt: DecimalType => castTo(value, dt, options)
       case _ =>
         sys.error(s"Failed to parse a value for data type $dataType.")
@@ -106,7 +106,7 @@ object TypeCast {
   private[xml] def isBoolean(value: String): Boolean = {
     value.toLowerCase match {
       case "true" | "false" => true
-      case _ => false
+      case _                => false
     }
   }
 
@@ -160,7 +160,7 @@ object TypeCast {
       TypeCast.castTo(data, DoubleType, options).asInstanceOf[Double]
     } else if (value.startsWith("-")) {
       val data = value.substring(1)
-     -TypeCast.castTo(data, DoubleType, options).asInstanceOf[Double]
+      -TypeCast.castTo(data, DoubleType, options).asInstanceOf[Double]
     } else {
       val data = value
       TypeCast.castTo(data, DoubleType, options).asInstanceOf[Double]

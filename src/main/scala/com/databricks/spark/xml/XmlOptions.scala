@@ -23,8 +23,8 @@ import com.databricks.spark.xml.util.ParseModes
  * Options for the XML data source.
  */
 private[xml] class XmlOptions(
-    @transient private val parameters: Map[String, String])
-  extends Serializable{
+  @transient private val parameters: Map[String, String])
+  extends Serializable {
   private val logger = LoggerFactory.getLogger(XmlRelation.getClass)
 
   val charset = parameters.getOrElse("charset", XmlOptions.DEFAULT_CHARSET)
@@ -64,7 +64,8 @@ private[xml] class XmlOptions(
   require(rowTag.nonEmpty, "'rowTag' option should not be empty string.")
   require(attributePrefix.nonEmpty, "'attributePrefix' option should not be empty string.")
   require(valueTag.nonEmpty, "'valueTag' option should not be empty string.")
-  require(valueTag != attributePrefix,
+  require(
+    valueTag != attributePrefix,
     "'valueTag' and 'attributePrefix' options should not be the same.")
 }
 

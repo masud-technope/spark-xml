@@ -68,7 +68,8 @@ private[xml] object InferSchema {
    *   3. Replace any remaining null fields with string, the top type
    */
   def infer(xml: RDD[String], options: XmlOptions): StructType = {
-    require(options.samplingRatio > 0,
+    require(
+      options.samplingRatio > 0,
       s"samplingRatio ($options.samplingRatio) should be greater than 0")
     val shouldHandleCorruptRecord = options.permissive
     val schemaData = if (options.samplingRatio > 0.99) {
@@ -108,7 +109,7 @@ private[xml] object InferSchema {
         }
       }
     }.treeAggregate[DataType](StructType(Seq()))(
-        compatibleType(options), compatibleType(options))
+      compatibleType(options), compatibleType(options))
 
     canonicalizeType(rootType) match {
       case Some(st: StructType) => st
@@ -126,20 +127,20 @@ private[xml] object InferSchema {
     }
 
     value match {
-      case null => NullType
-      case v if v.isEmpty => NullType
-      case v if isLong(v) => LongType
-      case v if isInteger(v) => IntegerType
-      case v if isDouble(v) => DoubleType
-      case v if isBoolean(v) => BooleanType
+      case null                => NullType
+      case v if v.isEmpty      => NullType
+      case v if isLong(v)      => LongType
+      case v if isInteger(v)   => IntegerType
+      case v if isDouble(v)    => DoubleType
+      case v if isBoolean(v)   => BooleanType
       case v if isTimestamp(v) => TimestampType
-      case v => StringType
+      case v                   => StringType
     }
   }
 
   private def inferField(parser: XMLEventReader, options: XmlOptions): DataType = {
     parser.peek match {
-      case _: EndElement => NullType
+      case _: EndElement   => NullType
       case _: StartElement => inferObject(parser, options)
       case c: Characters if c.isWhiteSpace =>
         // When `Characters` is found, we need to look further to decide
@@ -165,9 +166,9 @@ private[xml] object InferSchema {
    * Infer the type of a xml document from the parser's token stream
    */
   private def inferObject(
-      parser: XMLEventReader,
-      options: XmlOptions,
-      rootAttributes: Array[Attribute] = Array.empty): DataType = {
+    parser:         XMLEventReader,
+    options:        XmlOptions,
+    rootAttributes: Array[Attribute] = Array.empty): DataType = {
     val builder = Seq.newBuilder[StructField]
     val nameToDataType = collection.mutable.Map.empty[String, ArrayBuffer[DataType]]
     var shouldStop = false
@@ -222,7 +223,7 @@ private[xml] object InferSchema {
     }
     // We need to manually merges the fields having the sames so that
     // This can be inferred as ArrayType.
-    nameToDataType.foreach{
+    nameToDataType.foreach {
       case (field, dataTypes) if dataTypes.length > 1 =>
         val elementType = dataTypes.reduceLeft(InferSchema.compatibleType(options))
         builder += StructField(field, ArrayType(elementType), nullable = true)
@@ -249,8 +250,8 @@ private[xml] object InferSchema {
         if field.name.nonEmpty
         canonicalType <- canonicalizeType(field.dataType)
       } yield {
-          field.copy(dataType = canonicalType)
-        }
+        field.copy(dataType = canonicalType)
+      }
 
       if (canonicalFields.nonEmpty) {
         Some(StructType(canonicalFields))
@@ -260,7 +261,7 @@ private[xml] object InferSchema {
       }
 
     case NullType => Some(StringType)
-    case other => Some(other)
+    case other    => Some(other)
   }
 
   /**
@@ -328,7 +329,7 @@ private[xml] object InferSchema {
         case (_, NullType) => t1
         case (NullType, _) => t2
         // strings and every string is a XML object.
-        case (_, _) => StringType
+        case (_, _)        => StringType
       }
     }
   }

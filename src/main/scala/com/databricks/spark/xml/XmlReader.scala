@@ -16,7 +16,7 @@
 package com.databricks.spark.xml
 
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, SQLContext}
+import org.apache.spark.sql.{ DataFrame, SQLContext }
 import org.apache.spark.sql.types.StructType
 import com.databricks.spark.xml.util.XmlFile
 

@@ -18,20 +18,20 @@ package com.databricks.spark.xml
 import java.io.File
 import java.nio.charset.UnsupportedCharsetException
 import java.nio.file.Files
-import java.sql.{Date, Timestamp}
+import java.sql.{ Date, Timestamp }
 
 import scala.io.Source
 
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.io.{LongWritable, Text}
+import org.apache.hadoop.io.{ LongWritable, Text }
 import org.apache.hadoop.io.compress.GzipCodec
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
+import org.scalatest.{ BeforeAndAfterAll, FunSuite }
 
 import com.databricks.spark.xml.XmlOptions._
 import com.databricks.spark.xml.util.ParseModes
 import org.apache.spark.sql.types._
-import org.apache.spark.sql.{Row, SQLContext, SaveMode}
-import org.apache.spark.{SparkConf, SparkContext, SparkException}
+import org.apache.spark.sql.{ Row, SQLContext, SaveMode }
+import org.apache.spark.{ SparkConf, SparkContext, SparkException }
 
 class XmlSuite extends FunSuite with BeforeAndAfterAll {
   val tempEmptyDir = "target/test/empty/"
@@ -212,7 +212,8 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
   }
 
   test("DDL test with alias name") {
-    assume(org.apache.spark.SPARK_VERSION.take(3) >= "1.5",
+    assume(
+      org.apache.spark.SPARK_VERSION.take(3) >= "1.5",
       "Datasource alias feature was added in Spark 1.5")
 
     sqlContext.sql(
@@ -291,9 +292,7 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
         StructField("year", StringType, true),
         StructField("make", StringType, true),
         StructField("model", StringType, true),
-        StructField("comment", StringType, true)
-      )
-    )
+        StructField("comment", StringType, true)))
     val results = new XmlReader()
       .withSchema(schema)
       .xmlFile(sqlContext, carsUnbalancedFile)
@@ -481,7 +480,7 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
     val schemaCopy = StructType(
       List(StructField("a", ArrayType(
         StructType(List(StructField("item", ArrayType(StringType), nullable = true)))),
-          nullable = true)))
+        nullable = true)))
     val dfCopy = sqlContext.read.format("xml").load(copyFilePath)
 
     assert(dfCopy.count == df.count)
@@ -501,8 +500,9 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
         ByteType, ShortType, IntegerType, LongType,
         FloatType, DoubleType, DecimalType(25, 3), DecimalType(6, 5),
         DateType, TimestampType, MapType(StringType, StringType))
-    val fields = dataTypes.zipWithIndex.map { case (dataType, index) =>
-      StructField(s"col$index", dataType, nullable = true)
+    val fields = dataTypes.zipWithIndex.map {
+      case (dataType, index) =>
+        StructField(s"col$index", dataType, nullable = true)
     }
     val schema = StructType(fields)
 
@@ -538,8 +538,7 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
       StructField("genre", StringType, nullable = true),
       StructField("price", DoubleType, nullable = true),
       StructField("publish_date", StringType, nullable = true),
-      StructField("title", StringType, nullable = true))
-    ))
+      StructField("title", StringType, nullable = true))))
 
     assert(results.collect().size === numBooks)
   }
@@ -557,8 +556,7 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
       StructField("genre", StringType, nullable = true),
       StructField("price", DoubleType, nullable = true),
       StructField("publish_date", StringType, nullable = true),
-      StructField("title", StringType, nullable = true))
-    ))
+      StructField("title", StringType, nullable = true))))
 
     assert(results.collect().size === numBooks)
   }
@@ -576,8 +574,7 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
       StructField("price", DoubleType, nullable = true),
       StructField("publish_dates", StructType(
         List(StructField("publish_date", StringType))), nullable = true),
-      StructField("title", StringType, nullable = true))
-    ))
+      StructField("title", StringType, nullable = true))))
 
     assert(results.collect().size === numBooks)
   }
@@ -594,8 +591,7 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
       StructField("genre", StringType, nullable = true),
       StructField("price", DoubleType, nullable = true),
       StructField("publish_date", ArrayType(StringType), nullable = true),
-      StructField("title", StringType, nullable = true))
-    ))
+      StructField("title", StringType, nullable = true))))
 
     assert(results.collect().size === numBooks)
   }
@@ -609,20 +605,22 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
       StructField(s"${DEFAULT_ATTRIBUTE_PREFIX}id", StringType, nullable = true),
       StructField("author", StringType, nullable = true),
       StructField("genre", StructType(
-        List(StructField("genreid", LongType),
+        List(
+          StructField("genreid", LongType),
           StructField("name", StringType))),
         nullable = true),
       StructField("price", DoubleType, nullable = true),
       StructField("publish_dates", StructType(
-        List(StructField("publish_date",
+        List(StructField(
+          "publish_date",
           ArrayType(StructType(
-            List(StructField(s"${DEFAULT_ATTRIBUTE_PREFIX}tag", StringType, nullable = true),
+            List(
+              StructField(s"${DEFAULT_ATTRIBUTE_PREFIX}tag", StringType, nullable = true),
               StructField("day", LongType, nullable = true),
               StructField("month", LongType, nullable = true),
               StructField("year", LongType, nullable = true))))))),
         nullable = true),
-      StructField("title", StringType, nullable = true))
-    ))
+      StructField("title", StringType, nullable = true))))
 
     assert(results.collect().size === numBooksComplicated)
   }
@@ -637,12 +635,12 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
       StructField("_id", StringType, nullable = true),
       StructField("author", StringType, nullable = true),
       StructField("price", StructType(
-        List(StructField("_VALUE", StringType, nullable = true),
+        List(
+          StructField("_VALUE", StringType, nullable = true),
           StructField(s"_unit", StringType, nullable = true))),
         nullable = true),
       StructField("publish_date", StringType, nullable = true),
-      StructField("title", StringType, nullable = true))
-    )
+      StructField("title", StringType, nullable = true)))
 
     assert(resultsOne.schema === schemaOne)
     assert(resultsOne.count == numBooks)
@@ -660,12 +658,12 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
       StructField(s"${attributePrefix}id", StringType, nullable = true),
       StructField("author", StringType, nullable = true),
       StructField("price", StructType(
-        List(StructField(valueTag, StringType, nullable = true),
+        List(
+          StructField(valueTag, StringType, nullable = true),
           StructField(s"${attributePrefix}unit", StringType, nullable = true))),
         nullable = true),
       StructField("publish_date", StringType, nullable = true),
-      StructField("title", StringType, nullable = true))
-    )
+      StructField("title", StringType, nullable = true)))
 
     assert(resultsTwo.schema === schemaTwo)
     assert(resultsTwo.count == numBooks)
@@ -683,8 +681,7 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
       StructField("genre", StringType, nullable = true),
       StructField("price", DoubleType, nullable = true),
       StructField("publish_date", StringType, nullable = true),
-      StructField("title", StringType, nullable = true))
-    )
+      StructField("title", StringType, nullable = true)))
 
     assert(results.schema === schema)
   }
@@ -696,9 +693,7 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
         StructField("model", StringType, true),
         StructField("comment", StringType, true),
         StructField("color", StringType, true),
-        StructField("year", IntegerType, true)
-      )
-    )
+        StructField("year", IntegerType, true)))
     val results = new XmlReader()
       .withSchema(schema)
       .xmlFile(sqlContext, carsUnbalancedFile)
@@ -721,7 +716,7 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
   test("DSL test nullable fields") {
     val schema = StructType(
       StructField("name", StringType, false) ::
-      StructField("age", StringType, true) :: Nil)
+        StructField("age", StringType, true) :: Nil)
     val results = new XmlReader()
       .withSchema(schema)
       .xmlFile(sqlContext, nullNumbersFile)
@@ -734,8 +729,9 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
 
   test("DSL test for treating empty string as null value") {
     val results = new XmlReader()
-      .withSchema(StructType(List(StructField("name", StringType, false),
-      StructField("age", IntegerType, true))))
+      .withSchema(StructType(List(
+        StructField("name", StringType, false),
+        StructField("age", IntegerType, true))))
       .withTreatEmptyValuesAsNulls(true)
       .xmlFile(sqlContext, nullNumbersFile)
       .collect()
@@ -895,9 +891,9 @@ class XmlSuite extends FunSuite with BeforeAndAfterAll {
   test("DSL test with malformed attributes") {
     val results = new XmlReader()
       .withParseMode(ParseModes.DROP_MALFORMED_MODE)
-        .withRowTag(booksTag)
-        .xmlFile(sqlContext, booksMalformedAttributes)
-        .collect()
+      .withRowTag(booksTag)
+      .xmlFile(sqlContext, booksMalformedAttributes)
+      .collect()
 
     assert(results.length === 2)
     assert(results(0)(0) === "bk111")

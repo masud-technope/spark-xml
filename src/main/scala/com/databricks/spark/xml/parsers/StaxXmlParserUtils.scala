@@ -11,7 +11,7 @@ private[xml] object StaxXmlParserUtils {
    */
   def skipUntil(parser: XMLEventReader, eventType: Int): XMLEvent = {
     var event = parser.peek
-    while(parser.hasNext && event.getEventType != eventType) {
+    while (parser.hasNext && event.getEventType != eventType) {
       event = parser.nextEvent
     }
     event
@@ -22,7 +22,7 @@ private[xml] object StaxXmlParserUtils {
    */
   def checkEndElement(parser: XMLEventReader): Boolean = {
     parser.peek match {
-      case _: EndElement => true
+      case _: EndElement   => true
       case _: StartElement => false
       case _ =>
         // When other events are found here rather than `EndElement` or `StartElement`
@@ -37,8 +37,8 @@ private[xml] object StaxXmlParserUtils {
    * Produces values map from given attributes.
    */
   def convertAttributesToValuesMap(
-      attributes: Array[Attribute],
-      options: XmlOptions): Map[String, String] = {
+    attributes: Array[Attribute],
+    options:    XmlOptions): Map[String, String] = {
     if (options.excludeAttributeFlag) {
       Map.empty[String, String]
     } else {
@@ -46,7 +46,7 @@ private[xml] object StaxXmlParserUtils {
       val attrValues = attributes.map(_.getValue)
       val nullSafeValues = {
         if (options.treatEmptyValuesAsNulls) {
-          attrValues.map (v => if (v.trim.isEmpty) null else v)
+          attrValues.map(v => if (v.trim.isEmpty) null else v)
         } else {
           attrValues
         }
@@ -54,7 +54,6 @@ private[xml] object StaxXmlParserUtils {
       attrFields.zip(nullSafeValues).toMap
     }
   }
-
 
   /**
    * Convert the current structure of XML document to a XML string.

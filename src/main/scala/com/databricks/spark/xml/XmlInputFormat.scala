@@ -15,15 +15,15 @@
  */
 package com.databricks.spark.xml
 
-import java.io.{InputStream, IOException}
+import java.io.{ InputStream, IOException }
 import java.nio.charset.Charset
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Seekable
 import org.apache.hadoop.io.compress._
-import org.apache.hadoop.io.{DataOutputBuffer, LongWritable, Text}
-import org.apache.hadoop.mapreduce.{InputSplit, RecordReader, TaskAttemptContext}
-import org.apache.hadoop.mapreduce.lib.input.{FileSplit, TextInputFormat}
+import org.apache.hadoop.io.{ DataOutputBuffer, LongWritable, Text }
+import org.apache.hadoop.mapreduce.{ InputSplit, RecordReader, TaskAttemptContext }
+import org.apache.hadoop.mapreduce.lib.input.{ FileSplit, TextInputFormat }
 
 /**
  * Reads records that are delimited by a specific start/end tag.
@@ -31,8 +31,8 @@ import org.apache.hadoop.mapreduce.lib.input.{FileSplit, TextInputFormat}
 class XmlInputFormat extends TextInputFormat {
 
   override def createRecordReader(
-      split: InputSplit,
-      context: TaskAttemptContext): RecordReader[LongWritable, Text] = {
+    split:   InputSplit,
+    context: TaskAttemptContext): RecordReader[LongWritable, Text] = {
     new XmlRecordReader
   }
 }
@@ -243,7 +243,7 @@ private[xml] class XmlRecordReader extends RecordReader[LongWritable, Text] {
   private def checkAttributes(current: Int): Boolean = {
     var len = 0
     var b = current
-    while(len < space.length && b == space(len)) {
+    while (len < space.length && b == space(len)) {
       len += 1
       if (len >= space.length) {
         currentStartTag = startTag.take(startTag.length - angleBracket.length) ++ space

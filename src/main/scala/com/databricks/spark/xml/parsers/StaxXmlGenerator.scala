@@ -26,20 +26,21 @@ import com.databricks.spark.xml.XmlOptions
 // This class is borrowed from Spark json datasource.
 private[xml] object StaxXmlGenerator {
 
-  /** Transforms a single Row to XML
-    *
-    * @param schema the schema object used for conversion
-    * @param writer a XML writer object
-    * @param options options for XML datasource.
-    * @param row The row to convert
-    */
+  /**
+   * Transforms a single Row to XML
+   *
+   * @param schema the schema object used for conversion
+   * @param writer a XML writer object
+   * @param options options for XML datasource.
+   * @param row The row to convert
+   */
   def apply(
-      schema: StructType,
-      writer: IndentingXMLStreamWriter,
-      options: XmlOptions)(row: Row): Unit = {
+    schema:  StructType,
+    writer:  IndentingXMLStreamWriter,
+    options: XmlOptions)(row: Row): Unit = {
     def writeChildElement: (String, DataType, Any) => Unit = {
       // If this is meant to be value but in no child, write only a value
-      case (_, _, null) |(_, NullType, _) if options.nullValue == null =>
+      case (_, _, null) | (_, NullType, _) if options.nullValue == null =>
       // Because usually elements having `null` do not exist, just do not write
       // elements when given values are `null`.
       case (name, dt, v) if name == options.valueTag =>
@@ -54,8 +55,7 @@ private[xml] object StaxXmlGenerator {
     def writeChild(name: String, dt: DataType, v: Any): Unit = {
       (dt, v) match {
         // If this is meant to be attribute, write an attribute
-        case (_, null) | (NullType, _)
-          if name.startsWith(options.attributePrefix) && name != options.valueTag =>
+        case (_, null) | (NullType, _) if name.startsWith(options.attributePrefix) && name != options.valueTag =>
           Option(options.nullValue).foreach {
             writer.writeAttribute(name.substring(options.attributePrefix.length), _)
           }
@@ -74,18 +74,18 @@ private[xml] object StaxXmlGenerator {
     }
 
     def writeElement: (DataType, Any) => Unit = {
-      case (_, null) | (NullType, _) => writer.writeCharacters(options.nullValue)
-      case (StringType, v: String) => writer.writeCharacters(v.toString)
-      case (TimestampType, v: java.sql.Timestamp) => writer.writeCharacters(v.toString)
-      case (IntegerType, v: Int) => writer.writeCharacters(v.toString)
-      case (ShortType, v: Short) => writer.writeCharacters(v.toString)
-      case (FloatType, v: Float) => writer.writeCharacters(v.toString)
-      case (DoubleType, v: Double) => writer.writeCharacters(v.toString)
-      case (LongType, v: Long) => writer.writeCharacters(v.toString)
+      case (_, null) | (NullType, _)                => writer.writeCharacters(options.nullValue)
+      case (StringType, v: String)                  => writer.writeCharacters(v.toString)
+      case (TimestampType, v: java.sql.Timestamp)   => writer.writeCharacters(v.toString)
+      case (IntegerType, v: Int)                    => writer.writeCharacters(v.toString)
+      case (ShortType, v: Short)                    => writer.writeCharacters(v.toString)
+      case (FloatType, v: Float)                    => writer.writeCharacters(v.toString)
+      case (DoubleType, v: Double)                  => writer.writeCharacters(v.toString)
+      case (LongType, v: Long)                      => writer.writeCharacters(v.toString)
       case (DecimalType(), v: java.math.BigDecimal) => writer.writeCharacters(v.toString)
-      case (ByteType, v: Byte) => writer.writeCharacters(v.toString)
-      case (BooleanType, v: Boolean) => writer.writeCharacters(v.toString)
-      case (DateType, v) => writer.writeCharacters(v.toString)
+      case (ByteType, v: Byte)                      => writer.writeCharacters(v.toString)
+      case (BooleanType, v: Boolean)                => writer.writeCharacters(v.toString)
+      case (DateType, v)                            => writer.writeCharacters(v.toString)
 
       // For the case roundtrip in reading and writing XML files, [[ArrayType]] cannot have
       // [[ArrayType]] as element type. It always wraps the element with [[StructType]]. So,
@@ -98,8 +98,9 @@ private[xml] object StaxXmlGenerator {
         }
 
       case (MapType(kv, vt, _), mv: Map[_, _]) =>
-        val (attributes, elements) = mv.toSeq.partition { case (f, _) =>
-          f.toString.startsWith(options.attributePrefix) && f.toString != options.valueTag
+        val (attributes, elements) = mv.toSeq.partition {
+          case (f, _) =>
+            f.toString.startsWith(options.attributePrefix) && f.toString != options.valueTag
         }
         // We need to write attributes first before the value.
         (attributes ++ elements).foreach {
@@ -108,8 +109,9 @@ private[xml] object StaxXmlGenerator {
         }
 
       case (StructType(ty), r: Row) =>
-        val (attributes, elements) = ty.zip(r.toSeq).partition { case (f, _) =>
-          f.name.startsWith(options.attributePrefix) && f.name != options.valueTag
+        val (attributes, elements) = ty.zip(r.toSeq).partition {
+          case (f, _) =>
+            f.name.startsWith(options.attributePrefix) && f.name != options.valueTag
         }
         // We need to write attributes first before the value.
         (attributes ++ elements).foreach {
@@ -122,12 +124,14 @@ private[xml] object StaxXmlGenerator {
           s"Failed to convert value $v (class of ${v.getClass}) in type $dt to XML.")
     }
 
-    val (attributes, elements) = schema.zip(row.toSeq).partition { case (f, v) =>
-      f.name.startsWith(options.attributePrefix) && f.name != options.valueTag
+    val (attributes, elements) = schema.zip(row.toSeq).partition {
+      case (f, v) =>
+        f.name.startsWith(options.attributePrefix) && f.name != options.valueTag
     }
     // Writing attributes
     writer.writeStartElement(options.rowTag)
-    attributes.foreach { case (f, v) =>
+    attributes.foreach {
+      case (f, v) =>
         writer.writeAttribute(f.name.substring(options.attributePrefix.length), v.toString)
     }
     // Writing elements

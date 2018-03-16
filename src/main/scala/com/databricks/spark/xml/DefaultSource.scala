@@ -19,7 +19,7 @@ import org.apache.hadoop.fs.Path
 
 import org.apache.spark.sql.sources._
 import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.{DataFrame, SQLContext, SaveMode}
+import org.apache.spark.sql.{ DataFrame, SQLContext, SaveMode }
 import com.databricks.spark.xml.util.XmlFile
 
 /**
@@ -46,8 +46,8 @@ class DefaultSource
    * Parameters have to include 'path'.
    */
   override def createRelation(
-      sqlContext: SQLContext,
-      parameters: Map[String, String]): BaseRelation = {
+    sqlContext: SQLContext,
+    parameters: Map[String, String]): BaseRelation = {
     createRelation(sqlContext, parameters, null)
   }
 
@@ -56,9 +56,9 @@ class DefaultSource
    * Parameters have to include 'path'.
    */
   override def createRelation(
-      sqlContext: SQLContext,
-      parameters: Map[String, String],
-      schema: StructType): XmlRelation = {
+    sqlContext: SQLContext,
+    parameters: Map[String, String],
+    schema:     StructType): XmlRelation = {
     val path = checkPath(parameters)
     // We need the `charset` and `rowTag` before creating the relation.
     val (charset, rowTag) = {
@@ -74,10 +74,10 @@ class DefaultSource
   }
 
   override def createRelation(
-      sqlContext: SQLContext,
-      mode: SaveMode,
-      parameters: Map[String, String],
-      data: DataFrame): BaseRelation = {
+    sqlContext: SQLContext,
+    mode:       SaveMode,
+    parameters: Map[String, String],
+    data:       DataFrame): BaseRelation = {
     val path = checkPath(parameters)
     val filesystemPath = new Path(path)
     val fs = filesystemPath.getFileSystem(sqlContext.sparkContext.hadoopConfiguration)

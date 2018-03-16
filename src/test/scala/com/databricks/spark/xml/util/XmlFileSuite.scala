@@ -18,7 +18,7 @@ package com.databricks.spark.xml.util
 import java.nio.charset.UnsupportedCharsetException
 
 import org.apache.spark.SparkContext
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
+import org.scalatest.{ BeforeAndAfterAll, FunSuite }
 
 class XmlFileSuite extends FunSuite with BeforeAndAfterAll {
   val booksFile = "src/test/resources/books.xml"

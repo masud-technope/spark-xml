@@ -25,7 +25,8 @@ class CompressionCodecsSuite extends FunSuite {
     assert(CompressionCodecs.getCodecClass(classOf[GzipCodec].getName) == classOf[GzipCodec])
     assert(CompressionCodecs.getCodecClass(classOf[BZip2Codec].getName) == classOf[BZip2Codec])
     assert(CompressionCodecs.getCodecClass(classOf[SnappyCodec].getName) == classOf[SnappyCodec])
-    assume(VersionInfo.getVersion.take(1) >= "2",
+    assume(
+      VersionInfo.getVersion.take(1) >= "2",
       "Lz4 codec was added from Hadoop 2.x")
     val codecClassName = "org.apache.hadoop.io.compress.Lz4Codec"
     assert(CompressionCodecs.getCodecClass(codecClassName).getName == codecClassName)
@@ -35,7 +36,8 @@ class CompressionCodecsSuite extends FunSuite {
     assert(CompressionCodecs.getCodecClass("GzIp") == classOf[GzipCodec])
     assert(CompressionCodecs.getCodecClass("bZip2") == classOf[BZip2Codec])
     assert(CompressionCodecs.getCodecClass("Snappy") == classOf[SnappyCodec])
-    assume(VersionInfo.getVersion.take(1) >= "2",
+    assume(
+      VersionInfo.getVersion.take(1) >= "2",
       "Lz4 codec was added from Hadoop 2.x")
     val codecClassName = "org.apache.hadoop.io.compress.Lz4Codec"
     assert(CompressionCodecs.getCodecClass("lz4").getName == codecClassName)

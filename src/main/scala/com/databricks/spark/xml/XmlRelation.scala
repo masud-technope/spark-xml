@@ -22,16 +22,16 @@ import org.slf4j.LoggerFactory
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql._
-import org.apache.spark.sql.sources.{PrunedScan, InsertableRelation, BaseRelation, TableScan}
+import org.apache.spark.sql.sources.{ PrunedScan, InsertableRelation, BaseRelation, TableScan }
 import org.apache.spark.sql.types._
-import com.databricks.spark.xml.util.{InferSchema, XmlFile}
+import com.databricks.spark.xml.util.{ InferSchema, XmlFile }
 import com.databricks.spark.xml.parsers.StaxXmlParser
 
 case class XmlRelation protected[spark] (
-    baseRDD: () => RDD[String],
-    location: Option[String],
-    parameters: Map[String, String],
-    userSchema: StructType = null)(@transient val sqlContext: SQLContext)
+  baseRDD:    () => RDD[String],
+  location:   Option[String],
+  parameters: Map[String, String],
+  userSchema: StructType          = null)(@transient val sqlContext: SQLContext)
   extends BaseRelation
   with InsertableRelation
   with TableScan

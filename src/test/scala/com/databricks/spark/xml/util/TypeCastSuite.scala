@@ -16,7 +16,7 @@
 package com.databricks.spark.xml.util
 
 import java.math.BigDecimal
-import java.sql.{Date, Timestamp}
+import java.sql.{ Date, Timestamp }
 import java.util.Locale
 
 import org.scalatest.FunSuite
@@ -33,9 +33,10 @@ class TypeCastSuite extends FunSuite {
     val decimalValues = Seq(10.05, 1000.01, 158058049.001)
     val decimalType = DecimalType.SYSTEM_DEFAULT
 
-    stringValues.zip(decimalValues).foreach { case (strVal, decimalVal) =>
-      val decimal = new BigDecimal(decimalVal.toString)
-      assert(TypeCast.castTo(strVal, decimalType, options) === decimal)
+    stringValues.zip(decimalValues).foreach {
+      case (strVal, decimalVal) =>
+        val decimal = new BigDecimal(decimalVal.toString)
+        assert(TypeCast.castTo(strVal, decimalType, options) === decimal)
     }
   }
 
@@ -63,7 +64,7 @@ class TypeCastSuite extends FunSuite {
   test("Throws exception for empty string with non null type") {
     val options = new XmlOptions(Map.empty[String, String])
 
-    val exception = intercept[NumberFormatException]{
+    val exception = intercept[NumberFormatException] {
       TypeCast.castTo("", IntegerType, options, nullable = false)
     }
     assert(exception.getMessage.contains("For input string: \"\""))
@@ -104,7 +105,7 @@ class TypeCastSuite extends FunSuite {
 
   test("Float and Double Types are cast correctly with Locale") {
     val options = new XmlOptions(Map.empty[String, String])
-    val locale : Locale = new Locale("fr", "FR")
+    val locale: Locale = new Locale("fr", "FR")
     Locale.setDefault(locale)
     assert(TypeCast.castTo("1,00", FloatType, options) == 1.0)
     assert(TypeCast.castTo("1,00", DoubleType, options) == 1.0)

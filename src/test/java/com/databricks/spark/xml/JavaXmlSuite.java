@@ -30,56 +30,56 @@ import org.apache.spark.SparkContext;
 import org.apache.spark.sql.*;
 
 public class JavaXmlSuite {
-    private transient SQLContext sqlContext;
-    private int numBooks = 12;
+	private transient SQLContext sqlContext;
+	private int numBooks = 12;
 
-    String booksFile = "src/test/resources/books.xml";
-    String booksFileTag = "book";
+	String booksFile = "src/test/resources/books.xml";
+	String booksFileTag = "book";
 
-    private String tempDir = "target/test/xmlData/";
+	private String tempDir = "target/test/xmlData/";
 
-    @Before
-    public void setUp() throws IOException {
-        // Fix Spark 2.0.0 on windows, see https://issues.apache.org/jira/browse/SPARK-15893
-        SparkConf conf = new SparkConf().set(
-                "spark.sql.warehouse.dir",
-                Files.createTempDirectory("spark-warehouse").toString());
-        sqlContext = new SQLContext(new SparkContext("local[2]", "JavaXmlSuite", conf));
-    }
+	@Before
+	public void setUp() throws IOException {
+		// Fix Spark 2.0.0 on windows, see
+		// https://issues.apache.org/jira/browse/SPARK-15893
+		SparkConf conf = new SparkConf().set("spark.sql.warehouse.dir",
+				Files.createTempDirectory("spark-warehouse").toString());
+		sqlContext = new SQLContext(new SparkContext("local[2]", "JavaXmlSuite", conf));
+	}
 
-    @After
-    public void tearDown() {
-        sqlContext.sparkContext().stop();
-        sqlContext = null;
-    }
+	@After
+	public void tearDown() {
+		sqlContext.sparkContext().stop();
+		sqlContext = null;
+	}
 
-    @Test
-    public void testXmlParser() {
-        Dataset df = (new XmlReader()).withRowTag(booksFileTag).xmlFile(sqlContext, booksFile);
-        String prefix = XmlOptions.DEFAULT_ATTRIBUTE_PREFIX();
-        long result = df.select(prefix + "id").count();
-        Assert.assertEquals(result, numBooks);
-    }
+	@Test
+	public void testXmlParser() {
+		Dataset df = (new XmlReader()).withRowTag(booksFileTag).xmlFile(sqlContext, booksFile);
+		String prefix = XmlOptions.DEFAULT_ATTRIBUTE_PREFIX();
+		long result = df.select(prefix + "id").count();
+		Assert.assertEquals(result, numBooks);
+	}
 
-    @Test
-    public void testLoad() {
-        HashMap<String, String> options = new HashMap<String, String>();
-        options.put("rowTag", booksFileTag);
-        options.put("path", booksFile);
+	@Test
+	public void testLoad() {
+		HashMap<String, String> options = new HashMap<String, String>();
+		options.put("rowTag", booksFileTag);
+		options.put("path", booksFile);
 
-        Dataset df = sqlContext.load("com.databricks.spark.xml", options);
-        long result = df.select("description").count();
-        Assert.assertEquals(result, numBooks);
-    }
+		Dataset df = sqlContext.load("com.databricks.spark.xml", options);
+		long result = df.select("description").count();
+		Assert.assertEquals(result, numBooks);
+	}
 
-    @Test
-    public void testSave() {
-        Dataset df = (new XmlReader()).withRowTag(booksFileTag).xmlFile(sqlContext, booksFile);
-        TestUtils.deleteRecursively(new File(tempDir));
-        df.select("price", "description").write().format("xml").save(tempDir);
+	@Test
+	public void testSave() {
+		Dataset df = (new XmlReader()).withRowTag(booksFileTag).xmlFile(sqlContext, booksFile);
+		TestUtils.deleteRecursively(new File(tempDir));
+		df.select("price", "description").write().format("xml").save(tempDir);
 
-        Dataset newDf = (new XmlReader()).xmlFile(sqlContext, tempDir);
-        long result = newDf.select("price").count();
-        Assert.assertEquals(result, numBooks);
-    }
+		Dataset newDf = (new XmlReader()).xmlFile(sqlContext, tempDir);
+		long result = newDf.select("price").count();
+		Assert.assertEquals(result, numBooks);
+	}
 }

@@ -15,7 +15,7 @@
  */
 package com.databricks.spark.xml
 
-import java.io.{File, IOException}
+import java.io.{ File, IOException }
 
 private[xml] object TestUtils {
   /**

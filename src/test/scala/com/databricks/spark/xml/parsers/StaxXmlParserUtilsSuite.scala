@@ -17,11 +17,11 @@ package com.databricks.spark.xml.parsers
 
 import java.io.ByteArrayInputStream
 import javax.xml.stream.events.Attribute
-import javax.xml.stream.{XMLStreamConstants, XMLInputFactory}
+import javax.xml.stream.{ XMLStreamConstants, XMLInputFactory }
 
 import scala.collection.JavaConversions._
 
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
+import org.scalatest.{ BeforeAndAfterAll, FunSuite }
 
 import com.databricks.spark.xml.XmlOptions
 
@@ -65,7 +65,8 @@ class StaxXmlParserUtilsSuite extends FunSuite with BeforeAndAfterAll {
 
   test("Convert current structure to string") {
     val input = <ROW><id>2</id><info>
-      <name>Sam Mad Dog Smith</name><amount><small>1</small><large>9</large></amount></info></ROW>
+                                 <name>Sam Mad Dog Smith</name><amount><small>1</small><large>9</large></amount>
+                               </info></ROW>
     val reader = new ByteArrayInputStream(input.toString().getBytes)
     val parser = factory.createXMLEventReader(reader)
     // Skip until </id>
@@ -73,14 +74,18 @@ class StaxXmlParserUtilsSuite extends FunSuite with BeforeAndAfterAll {
     val xmlString = StaxXmlParserUtils.currentStructureAsString(parser)
 
     val expected = <info>
-      <name>Sam Mad Dog Smith</name><amount><small>1</small><large>9</large></amount></info>
+                     <name>Sam Mad Dog Smith</name><amount><small>1</small><large>9</large></amount>
+                   </info>
     assert(xmlString === expected.toString())
   }
 
   test("Skip XML children") {
     val input = <ROW><info>
-      <name>Sam Mad Dog Smith</name><amount><small>1</small>
-        <large>9</large></amount></info><abc>2</abc><test>2</test></ROW>
+                       <name>Sam Mad Dog Smith</name><amount>
+                                                       <small>1</small>
+                                                       <large>9</large>
+                                                     </amount>
+                     </info><abc>2</abc><test>2</test></ROW>
     val reader = new ByteArrayInputStream(input.toString().getBytes)
     val parser = factory.createXMLEventReader(reader)
     // We assume here it's reading the value within `id` field.
