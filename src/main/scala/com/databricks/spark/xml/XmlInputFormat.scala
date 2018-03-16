@@ -76,9 +76,11 @@ private[xml] class XmlRecordReader extends RecordReader[LongWritable, Text] {
     startTag = conf.get(XmlInputFormat.START_TAG_KEY).getBytes(charset)
     endTag = conf.get(XmlInputFormat.END_TAG_KEY).getBytes(charset)
     space = " ".getBytes(charset)
-    angleBracket = ">".getBytes(charset)
+    angleBracket = "/>".getBytes(charset)
+    //tagPattern = ("\\"+new String(startTag).substring(0,new String(startTag).length-1)+"([^\\>]*)").r
+
     require(startTag != null, "Start tag cannot be null.")
-    require(endTag != null, "End tag cannot be null.")
+    //require(endTag != null, "End tag cannot be null.")
     require(space != null, "White space cannot be null.")
     require(angleBracket != null, "Angle bracket cannot be null.")
     start = fileSplit.getStart
@@ -198,7 +200,9 @@ private[xml] class XmlRecordReader extends RecordReader[LongWritable, Text] {
         return false
       } else {
         buffer.write(b)
-        if (b == startTag(si) && b == endTag(ei)) {
+
+        //commented: original
+        if (b == startTag(si) && b == angleBracket(ei)) {
           // In start tag or end tag.
           si += 1
           ei += 1
@@ -213,8 +217,8 @@ private[xml] class XmlRecordReader extends RecordReader[LongWritable, Text] {
             si += 1
             ei = 0
           }
-        } else if (b == endTag(ei)) {
-          if (ei >= endTag.length - 1) {
+        } else if (b == angleBracket(ei)) {
+          if (ei >= angleBracket.length - 1) {
             if (depth == 0) {
               // Found closing end tag.
               return true
