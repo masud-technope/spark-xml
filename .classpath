@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src/main/scala">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/scala">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/junit-interface-0.9.jar"/>
+	<classpathentry kind="lib" path="lib/scalac-scoverage-plugin_2.11-1.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/scalac-scoverage-runtime_2.11-1.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.5.jar"/>
+	<classpathentry kind="lib" path="lib/spark-sql_2.11-2.3.0.jar"/>
+	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/spark-core_2.11-2.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/hadoop-client-3.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/scala-library-2.11.7.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/datanucleus-api-jdo-3.2.6.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/datanucleus-core-3.2.10.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/datanucleus-rdbms-3.2.9.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/hadoop-annotations-2.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/hadoop-client-2.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/hadoop-common-2.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/hadoop-hdfs-2.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/jackson-annotations-2.6.5.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/jackson-core-2.6.5.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/jackson-core-asl-1.9.13.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/jackson-databind-2.6.5.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/jackson-jaxrs-1.9.13.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/hadoop-mapreduce-client-app-2.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/hadoop-mapreduce-client-common-2.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/BigDataFrameWork/Spark/spark-2.2.0-bin-hadoop2.7/jars/hadoop-mapreduce-client-core-2.7.3.jar"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/junit-4.12.jar"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
